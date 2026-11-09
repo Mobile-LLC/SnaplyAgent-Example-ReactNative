@@ -117,6 +117,13 @@ Snaply backend.
 Not measured: Expo (a managed app has no native folders in the repo; the two init calls would go
 through a config plugin), and a physical device.
 
+What the agent received — the same screen on iOS and on Android (the IBAN is the identifier rule
+that does not match on Android yet):
+
+| iOS | Android |
+|---|---|
+| ![The capture on iOS](docs/capture-ios.png) | ![The capture on Android](docs/capture-android.png) |
+
 ## What is not here yet
 
 There is no JavaScript API. `Snaply.identify(…)` after sign-in, `Snaply.reset()` on sign-out and
