@@ -1,21 +1,27 @@
 /**
  * Snaply Agent — React Native example.
  *
- * The SDK itself is started natively (ios/SnaplyExample/AppDelegate.swift and
- * android/.../MainActivity.kt). Nothing in this file calls it: a React Native screen is made of
- * real native views, so the SDK captures it like any other app. What this file shows is how a
- * React Native field is hidden from a capture.
+ * The whole integration is in this file: `Snaply.on` and `Snaply.configure` in the effect below,
+ * and `<SnaplyRedact>` around what must never leave the phone. There is no Snaply code in the
+ * ios or android folders.
  */
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
+  Platform,
   Pressable,
   StatusBar,
   StyleSheet,
   Text,
   TextInput,
+  View,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
+import { Snaply, SnaplyError, SnaplyRedact } from '@snaplyagent/react-native';
+
+import { androidKey, host, iosKey } from './snaply.config';
+
+const user = { id: 'usr_20481', name: 'Maya Kowalski' };
 
 function App() {
   const [items, setItems] = useState(2);
@@ -24,7 +30,48 @@ function App() {
   const [iban, setIban] = useState('DE89 3704 0044 0532');
   const [passport, setPassport] = useState('AB1234567');
   const [note, setNote] = useState('Leave at the door');
+  const [status, setStatus] = useState('Connecting…');
   const addItem = () => setItems(n => n + 1);
+
+  useEffect(() => {
+    // 1. Listen before you configure: a request can arrive as soon as the device is registered.
+    Snaply.on({
+      onRequestShown: () => setStatus('Support asked to see your screen…'),
+      onAllowed: () => setStatus('Screenshot shared ✓'),
+      onDenied: () => setStatus('You declined the request.'),
+      onExpired: () => setStatus('The request expired.'),
+      onRemoteControl: active =>
+        setStatus(
+          active ? 'Support can control this screen.' : 'Remote control ended.',
+        ),
+      onLiveEnded: () => setStatus('Live session ended.'),
+      onError: error => setStatus(`Snaply error: ${error.code}`),
+    });
+    // 2. Configure once, with the key of this platform's product. `user` is optional — without
+    //    it the device stays anonymous and support finds it by the support code.
+    Snaply.configure({
+      key: Platform.OS === 'ios' ? iosKey : androidKey,
+      environment: host,
+      user,
+    }).then(
+      () => setStatus('Ready — support can ask to see this screen.'),
+      (error: SnaplyError) => setStatus(`Could not connect: ${error.code}`),
+    );
+  }, []);
+
+  // When someone signs in after launch.
+  const signIn = () => {
+    Snaply.identify(user);
+    setStatus(`Signed in as ${user.name}.`);
+  };
+
+  // On sign-out: detaches the person. The device keeps its support code.
+  const signOut = async () => {
+    Snaply.reset();
+    setStatus(
+      `Signed out · support code ${(await Snaply.supportCode()) ?? '—'}`,
+    );
+  };
 
   return (
     <SafeAreaProvider>
@@ -44,16 +91,17 @@ function App() {
           secureTextEntry
         />
 
-        {/* Hidden by the developer: a testID containing "snaply-redact" is the SDK's mark.
-            The box is painted on the device before the image is encoded. */}
+        {/* Hidden by you: wrap it in SnaplyRedact. The box is painted on the device before the
+            image is encoded. */}
         <Text style={styles.label}>Card number</Text>
-        <TextInput
-          style={styles.input}
-          value={card}
-          onChangeText={setCard}
-          keyboardType="number-pad"
-          testID="snaply-redact-card"
-        />
+        <SnaplyRedact>
+          <TextInput
+            style={styles.input}
+            value={card}
+            onChangeText={setCard}
+            keyboardType="number-pad"
+          />
+        </SnaplyRedact>
 
         {/* Hidden from the dashboard, by identifier: Products → Hidden fields → "ibanField". */}
         <Text style={styles.label}>IBAN</Text>
@@ -79,26 +127,39 @@ function App() {
         <Text style={styles.label}>Delivery note</Text>
         <TextInput style={styles.input} value={note} onChangeText={setNote} />
 
-        {/* The mark works on any view, not only on inputs. */}
+        {/* Any view, not only an input. */}
         <Text style={styles.label}>Delivery address</Text>
-        <Text style={styles.address} testID="snaply-redact-address">
-          12 Rue des Lilas, Paris
-        </Text>
+        <SnaplyRedact>
+          <Text style={styles.address}>12 Rue des Lilas, Paris</Text>
+        </SnaplyRedact>
 
         <Text style={styles.error}>Payment failed — card declined (402)</Text>
 
-        {/* Remote control on iOS reaches a control through accessibility activation, and React
-            Native answers that only when onAccessibilityTap is set — so a pressable an agent
-            should be able to tap carries it, next to onPress. Android needs nothing. */}
+        {/* An ordinary pressable: an agent with remote control can tap it. */}
         <Pressable
           style={styles.button}
           onPress={addItem}
-          onAccessibilityTap={addItem}
           testID="addItem"
           accessibilityRole="button"
         >
           <Text style={styles.buttonText}>Add one more</Text>
         </Pressable>
+
+        <View style={styles.row}>
+          <Pressable onPress={signOut} accessibilityRole="button">
+            <Text style={styles.link}>Sign out</Text>
+          </Pressable>
+          <Pressable onPress={signIn} accessibilityRole="button">
+            <Text style={styles.link}>Sign in</Text>
+          </Pressable>
+          <Pressable
+            onPress={Snaply.showSupportCode}
+            accessibilityRole="button"
+          >
+            <Text style={styles.link}>Support code</Text>
+          </Pressable>
+        </View>
+        <Text style={styles.status}>{status}</Text>
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -136,6 +197,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   buttonText: { color: '#ffffff', fontSize: 15, fontWeight: '600' },
+  row: { flexDirection: 'row', gap: 20, marginTop: 14 },
+  link: {
+    color: '#1f6f4a',
+    fontSize: 14,
+    fontWeight: '600',
+    paddingVertical: 6,
+  },
+  status: { fontSize: 13, color: '#5b665e', marginTop: 8 },
 });
 
 export default App;

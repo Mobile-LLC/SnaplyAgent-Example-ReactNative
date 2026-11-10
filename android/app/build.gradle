@@ -111,9 +111,6 @@ dependencies {
     // The version of react-native is set by the React Native Gradle Plugin
     implementation("com.facebook.react:react-android")
 
-    // The Snaply Agent SDK — one dependency, from Maven Central.
-    implementation("com.snaplyagent:agent:2.38.0")
-
     if (hermesEnabled.toBoolean()) {
         implementation("com.facebook.react:hermes-android")
     } else {

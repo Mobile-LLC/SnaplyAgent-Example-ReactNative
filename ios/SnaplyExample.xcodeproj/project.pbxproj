@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		0C80B921A6F3F58F76C31292 /* libPods-SnaplyExample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 5DCACB8F33CDC322A6C60F78 /* libPods-SnaplyExample.a */; };
-		0F66F98F4B7BE92688939E42 /* SnaplyAgent in Frameworks */ = {isa = PBXBuildFile; productRef = 6A9707BF1ECC2DA399901BC4 /* SnaplyAgent */; };
 		13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 13B07FB51A68108700A75B9A /* Images.xcassets */; };
 		761780ED2CA45674006654EE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EC2CA45674006654EE /* AppDelegate.swift */; };
 		761780EF2CA45674006654EF /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 761780EE2CA45674006654EF /* SceneDelegate.swift */; };
@@ -36,7 +35,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				0C80B921A6F3F58F76C31292 /* libPods-SnaplyExample.a in Frameworks */,
-				0F66F98F4B7BE92688939E42 /* SnaplyAgent in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,9 +121,6 @@
 			dependencies = (
 			);
 			name = SnaplyExample;
-			packageProductDependencies = (
-				6A9707BF1ECC2DA399901BC4 /* SnaplyAgent */,
-			);
 			productName = SnaplyExample;
 			productReference = 13B07F961A680F5B00A75B9A /* SnaplyExample.app */;
 			productType = "com.apple.product-type.application";
@@ -152,9 +147,6 @@
 				Base,
 			);
 			mainGroup = 83CBB9F61A601CBA00E9B192;
-			packageReferences = (
-				9C04D5C8543B770B77C9400F /* XCRemoteSwiftPackageReference "SnaplyAgent-SDK-iOS" */,
-			);
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -501,25 +493,6 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
-
-/* Begin XCRemoteSwiftPackageReference section */
-		9C04D5C8543B770B77C9400F /* XCRemoteSwiftPackageReference "SnaplyAgent-SDK-iOS" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/Mobile-LLC/SnaplyAgent-SDK-iOS";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.47.0;
-			};
-		};
-/* End XCRemoteSwiftPackageReference section */
-
-/* Begin XCSwiftPackageProductDependency section */
-		6A9707BF1ECC2DA399901BC4 /* SnaplyAgent */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 9C04D5C8543B770B77C9400F /* XCRemoteSwiftPackageReference "SnaplyAgent-SDK-iOS" */;
-			productName = SnaplyAgent;
-		};
-/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 83CBB9F71A601CBA00E9B192 /* Project object */;
 }
