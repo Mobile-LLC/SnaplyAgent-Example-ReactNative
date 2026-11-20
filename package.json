@@ -11,7 +11,7 @@
   },
   "dependencies": {
     "@react-native/new-app-screen": "0.88.1",
-    "@snaplyagent/react-native": "github:Mobile-LLC/SnaplyAgent-SDK-ReactNative#v1.2.0",
+    "@snaplyagent/react-native": "github:Mobile-LLC/SnaplyAgent-SDK-ReactNative#v1.3.0",
     "react": "19.3.0",
     "react-native": "0.88.1",
     "react-native-safe-area-context": "^5.5.2"

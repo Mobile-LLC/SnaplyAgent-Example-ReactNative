@@ -75,6 +75,11 @@ Set `host` in `snaply.config.ts` — `http://localhost:5100` on the iOS simulato
 `http://10.0.2.2:5100` on the Android emulator. Plain `http` is accepted for the machine's own
 loopback only.
 
+Everything the SDK and its server exchange is sealed to keys that server's master key vouches for.
+Snaply's own are built in; for `host` the app passes `SnaplyDevelopmentMaster` in `serverKeys`
+(`App.tsx`) — the one published key of a Snaply stack on your own machine. A server of your own has
+its own master key: put its public half there instead.
+
 ## Docs
 
 <https://snaplyagent.com/docs>

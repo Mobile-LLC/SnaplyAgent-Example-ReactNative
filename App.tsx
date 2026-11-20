@@ -17,7 +17,12 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import { Snaply, SnaplyError, SnaplyRedact } from '@snaplyagent/react-native';
+import {
+  Snaply,
+  SnaplyDevelopmentMaster,
+  SnaplyError,
+  SnaplyRedact,
+} from '@snaplyagent/react-native';
 
 import { androidKey, host, iosKey } from './snaply.config';
 
@@ -52,6 +57,8 @@ function App() {
     Snaply.configure({
       key: Platform.OS === 'ios' ? iosKey : androidKey,
       environment: host,
+      // A backend on your own machine is vouched for by the published development key.
+      serverKeys: host ? [SnaplyDevelopmentMaster] : undefined,
       user,
     }).then(
       () => setStatus('Ready — support can ask to see this screen.'),
