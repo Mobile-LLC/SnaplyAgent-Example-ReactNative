@@ -1,7 +1,7 @@
 # Snaply Agent — React Native example
 
 A runnable React Native app with Snaply Agent inside, through the
-[`@snaplyagent/react-native`](https://github.com/Mobile-LLC/SnaplyAgent-SDK-ReactNative) package.
+[`@snaplyagent/react-native`](https://www.npmjs.com/package/@snaplyagent/react-native) package.
 
 The whole integration is in [`App.tsx`](App.tsx): `Snaply.on` and `Snaply.configure`, and
 `<SnaplyRedact>` around what must never leave the phone. There is no Snaply code in the `ios` or
@@ -29,7 +29,7 @@ The whole integration is in [`App.tsx`](App.tsx): `Snaply.on` and `Snaply.config
 ## Adding Snaply to your own React Native app
 
 ```sh
-npm install github:Mobile-LLC/SnaplyAgent-SDK-ReactNative
+npm install @snaplyagent/react-native
 cd ios && pod install
 ```
 
@@ -67,7 +67,7 @@ What the agent received — iOS and Android:
 
 On iOS a `<Text>` is its own accessibility label, so the rule by text also hides the caption
 "Passport". What was measured, and what was not, is in the
-[package's README](https://github.com/Mobile-LLC/SnaplyAgent-SDK-ReactNative#what-was-measured).
+[package's README](https://www.npmjs.com/package/@snaplyagent/react-native).
 
 ## Pointing the app at another backend
 
